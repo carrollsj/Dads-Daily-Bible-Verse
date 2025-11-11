@@ -1,4 +1,7 @@
-/* Reset and basics */
+/* ==============================
+   BASE STYLES
+   ============================== */
+
 * {
   margin: 0;
   padding: 0;
@@ -12,6 +15,10 @@ html, body {
   color: #fff;
   overflow-x: hidden;
 }
+
+/* ==============================
+   FAMILY PAGE
+   ============================== */
 
 /* Verse display section */
 .verse-container {
@@ -86,3 +93,279 @@ html, body {
 }
 
 /* Comments */
+.comments-section {
+  margin-top: 20px;
+}
+
+.comments-section h3 {
+  color: #444;
+  margin-bottom: 10px;
+}
+
+#comment-list {
+  max-height: 120px;
+  overflow-y: auto;
+  background: #f1f1f1;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+#new-comment {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+#add-comment {
+  background-color: #74b9ff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+#add-comment:hover {
+  background-color: #0984e3;
+}
+
+/* Search section */
+.search-section {
+  margin-top: 25px;
+}
+
+#search-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+#search-button {
+  background-color: #55efc4;
+  border: none;
+  color: #333;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+#search-button:hover {
+  background-color: #00b894;
+}
+
+/* Request section */
+.request-section {
+  margin-top: 25px;
+  padding-bottom: 50px;
+}
+
+#request-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+#send-request {
+  background-color: #fab1a0;
+  border: none;
+  color: #333;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+#send-request:hover {
+  background-color: #e17055;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Mobile optimization */
+@media (max-width: 600px) {
+  #verse-text {
+    font-size: 1.3em;
+  }
+  #custom-message {
+    font-size: 0.95em;
+  }
+  .interaction-section {
+    padding: 15px;
+  }
+}
+
+/* ==============================
+   ADMIN PAGE STYLES
+   ============================== */
+
+.admin-body {
+  background: linear-gradient(135deg, #fff8e1, #fceabb);
+  color: #333;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Login Screen */
+.login-container {
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-container h2 {
+  margin-bottom: 15px;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.login-container button {
+  background-color: #74b9ff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+.login-container button:hover {
+  background-color: #0984e3;
+}
+
+/* Admin Panel */
+.admin-container {
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  max-width: 600px;
+  width: 100%;
+}
+
+.admin-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #222;
+}
+
+.admin-container label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.admin-container input,
+.admin-container select,
+.admin-container textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-top: 5px;
+  font-size: 1em;
+}
+
+.admin-container textarea {
+  min-height: 80px;
+}
+
+#generate-btn {
+  margin-top: 20px;
+  background-color: #f7d794;
+  color: #333;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  width: 100%;
+}
+
+#generate-btn:hover {
+  background-color: #f6b93b;
+}
+
+/* Output / Preview */
+.admin-output {
+  margin-top: 25px;
+  text-align: center;
+}
+
+#admin-alert {
+  font-weight: bold;
+  color: #27ae60;
+  margin-bottom: 10px;
+}
+
+#preview-image {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  margin-bottom: 10px;
+}
+
+#preview-link a {
+  color: #0984e3;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+#preview-link a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+  .admin-container, .login-container {
+    padding: 20px;
+  }
+  #preview-image {
+    max-height: 180px;
+  }
+}
+
+/* ==============================
+   ADMIN LINK (bottom-left)
+   ============================== */
+
+.admin-link {
+  position: fixed;
+  bottom: 10px;
+  left: 15px;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 0.9em;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 5px 10px;
+  border-radius: 10px;
+  transition: 0.2s ease;
+  z-index: 999;
+}
+
+.admin-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
