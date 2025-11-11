@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
+  <!-- Verse display -->
   <div class="verse-container">
     <div class="overlay">
       <h1 id="verse-text">"The Lord is my shepherd; I have what I need."</h1>
@@ -16,9 +17,11 @@
     <div class="love-dad">Love Dad</div>
   </div>
 
+  <!-- Interaction section -->
   <div class="interaction-section">
     <button id="like-button">❤️ Like <span id="like-count">0</span></button>
 
+    <!-- Comments -->
     <div class="comments-section">
       <h3>Comments</h3>
       <div id="comment-list">
@@ -28,6 +31,7 @@
       <button id="add-comment">Add Comment</button>
     </div>
 
+    <!-- Search -->
     <div class="search-section">
       <h3>Search Previous Verses</h3>
       <input type="text" id="search-input" placeholder="Search by verse or keyword...">
@@ -35,6 +39,7 @@
       <div id="search-results"></div>
     </div>
 
+    <!-- Verse requests -->
     <div class="request-section">
       <h3>Request a Verse or Topic</h3>
       <textarea id="request-input" placeholder="Ask Dad for a verse or topic..."></textarea>
@@ -42,6 +47,9 @@
       <p id="request-confirmation" class="hidden">Request sent! 💌</p>
     </div>
   </div>
+
+  <!-- Admin link -->
+  <a href="admin.html" class="admin-link">⚙️ Admin</a>
 
   <script src="assets/script.js"></script>
 </body>
