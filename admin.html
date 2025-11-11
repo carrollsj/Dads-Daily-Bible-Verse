@@ -1,1 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | Dad’s Daily Bible Verse</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="admin-body">
+  <div id="login-screen" class="login-container">
+    <h2>Admin Login</h2>
+    <input type="password" id="admin-password" placeholder="Enter password..." />
+    <button id="login-btn">Login</button>
+    <p id="login-message"></p>
+  </div>
+
+  <div id="admin-panel" class="hidden admin-container">
+    <h1>Dad’s Daily Bible Verse — Admin Page</h1>
+
+    <label for="verse-input">Bible Verse Reference</label>
+    <input type="text" id="verse-input" placeholder="e.g., 1 Peter 2:3–5">
+
+    <label for="version-select">Select Version</label>
+    <select id="version-select">
+      <option value="CSB">CSB</option>
+      <option value="NKJV">NKJV</option>
+    </select>
+
+    <label for="message-input">Custom Message</label>
+    <textarea id="message-input" placeholder="Optional message for your family..."></textarea>
+
+    <label for="theme-input">Image Theme (Optional)</label>
+    <input type="text" id="theme-input" placeholder="e.g., beach sunset, mountain cross...">
+
+    <button id="generate-btn">Generate Verse Image</button>
+
+    <div id="admin-output" class="admin-output hidden">
+      <p id="admin-alert"></p>
+      <img id="preview-image" src="" alt="Generated Verse Image" class="hidden" />
+      <p id="preview-link" class="hidden"></p>
+    </div>
+  </div>
+
+  <script>
+    // ---------- LOGIN ----------
+    const loginScreen = document.getElementById("login-screen");
+    const adminPanel = document.getElementById("admin-panel");
+    const loginBtn = document.getElementById("login-btn");
+    const loginMsg = document.getElementById("login-message");
+    const passwordInput = document.getElementById("admin-password");
+
+    loginBtn.addEventListener("click", () => {
+      const entered = passwordInput.value.trim();
+      if (entered === "Jesus") {
+        loginScreen.classList.add("hidden");
+        adminPanel.classList.remove("hidden");
+      } else {
+        loginMsg.textContent = "Incorrect password. Try again.";
+      }
+    });
+
+    // ---------- DUPLICATE DETECTION ----------
+    const usedVerses = JSON.parse(localStorage.getItem("usedVerses")) || [];
+    const verseInput = document.getElementById("verse-input");
+    const versionSelect = document.getElementById("version-select");
+    const messageInput = document.getElementById("message-input");
+    const themeInput = document.getElementById("theme-input");
+    const generateBtn = document.getElementById("generate-btn");
+    const adminAlert = document.getElementById("admin-alert");
+    const outputContainer = document.getElementById("admin-output");
+    const previewImg = document.getElementById("preview-image");
+    const previewLink = document.getElementById("preview-link");
+
+    generateBtn.addEventListener("click", () => {
+      const verse = verseInput.value.trim();
+      if (!verse) {
+        alert("Please enter a verse reference.");
+        return;
+      }
+
+      const duplicate = usedVerses.find(v => v.verse.toLowerCase() === verse.toLowerCase());
+      if (duplicate) {
+        const proceed = confirm(`This verse (${verse}) has already been shared.\nWould you like to view the previous image or create a new one?`);
+        if (!proceed) {
+          adminAlert.textContent = "Previous image located (simulated). You can still generate a new one if desired.";
+          outputContainer.classList.remove("hidden");
+          return;
+        }
+      }
+
+      const version = versionSelect.value;
+      const message = messageInput.value.trim();
+      const theme = themeInput.value.trim();
+
+      const newEntry = {
+        verse,
+        version,
+        message,
+        theme,
+        date: new Date().toISOString()
+      };
+      usedVerses.push(newEntry);
+      localStorage.setItem("usedVerses", JSON.stringify(usedVerses));
+
+      // Simulated image generation
+      adminAlert.textContent = "✅ New verse image created and saved (simulation).";
+      previewImg.src = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80";
+      previewImg.classList.remove("hidden");
+      previewLink.innerHTML = `<a href="index.html" target="_blank">View Family Page ↗️</a>`;
+      previewLink.classList.remove("hidden");
+      outputContainer.classList.remove("hidden");
+    });
+  </script>
+</body>
+</html>
 
