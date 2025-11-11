@@ -30,7 +30,7 @@
     <textarea id="message-input" placeholder="Optional message for your family..."></textarea>
 
     <label for="theme-input">Image Theme (Optional)</label>
-    <input type="text" id="theme-input" placeholder="e.g., beach sunset, mountain cross...">
+    <input type="text" id="theme-input" placeholder="e.g., beach sunset, mountain sunrise...">
 
     <button id="generate-btn">Generate Verse Image</button>
 
@@ -59,8 +59,7 @@
       }
     });
 
-    // ---------- DUPLICATE DETECTION ----------
-    const usedVerses = JSON.parse(localStorage.getItem("usedVerses")) || [];
+    // ---------- ELEMENTS ----------
     const verseInput = document.getElementById("verse-input");
     const versionSelect = document.getElementById("version-select");
     const messageInput = document.getElementById("message-input");
@@ -71,46 +70,43 @@
     const previewImg = document.getElementById("preview-image");
     const previewLink = document.getElementById("preview-link");
 
-    generateBtn.addEventListener("click", () => {
+    // ---------- LIVE GENERATION ----------
+    generateBtn.addEventListener("click", async () => {
       const verse = verseInput.value.trim();
+      const version = versionSelect.value;
+      const message = messageInput.value.trim();
+      const theme = themeInput.value.trim() || "nature";
+
       if (!verse) {
         alert("Please enter a verse reference.");
         return;
       }
 
-      const duplicate = usedVerses.find(v => v.verse.toLowerCase() === verse.toLowerCase());
-      if (duplicate) {
-        const proceed = confirm(`This verse (${verse}) has already been shared.\nWould you like to view the previous image or create a new one?`);
-        if (!proceed) {
-          adminAlert.textContent = "Previous image located (simulated). You can still generate a new one if desired.";
-          outputContainer.classList.remove("hidden");
-          return;
-        }
-      }
-
-      const version = versionSelect.value;
-      const message = messageInput.value.trim();
-      const theme = themeInput.value.trim();
-
-      const newEntry = {
-        verse,
-        version,
-        message,
-        theme,
-        date: new Date().toISOString()
-      };
-      usedVerses.push(newEntry);
-      localStorage.setItem("usedVerses", JSON.stringify(usedVerses));
-
-      // Simulated image generation
-      adminAlert.textContent = "✅ New verse image created and saved (simulation).";
-      previewImg.src = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80";
-      previewImg.classList.remove("hidden");
-      previewLink.innerHTML = `<a href="index.html" target="_blank">View Family Page ↗️</a>`;
-      previewLink.classList.remove("hidden");
+      adminAlert.textContent = "⏳ Generating verse image, please wait...";
       outputContainer.classList.remove("hidden");
+
+      try {
+        const response = await fetch("https://dads-daily-bible-verse.vercel.app/api/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ verse, version, message, theme })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.image_url) {
+          adminAlert.textContent = "✅ New verse image created successfully!";
+          previewImg.src = data.image_url;
+          previewImg.classList.remove("hidden");
+          previewLink.innerHTML = `<a href="${data.image_url}" target="_blank">Open Image in New Tab ↗️</a>`;
+          previewLink.classList.remove("hidden");
+        } else {
+          adminAlert.textContent = "⚠️ Error: " + (data.error || "Something went wrong.");
+        }
+      } catch (err) {
+        adminAlert.textContent = "❌ Failed to connect to image generator.";
+      }
     });
   </script>
 </body>
 </html>
-
