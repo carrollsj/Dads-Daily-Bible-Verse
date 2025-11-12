@@ -1,0 +1,23 @@
+{
+  "verse": "Psalm 23:1",
+  "version": "CSB",
+  "text": "The Lord is my shepherd; I have what I need.",
+  "message": "Have a peaceful day. ❤️",
+  "image_url": null,
+  "date": "2024-11-11"
+}
+```
+
+**Your folder structure should now look like:**
+```
+Dads-Daily-Bible-Verse/
+├── index.html          (UPDATED)
+├── admin.html
+├── api/
+│   └── generate.py     (UPDATED)
+├── assets/
+│   ├── style.css
+│   └── script.js
+├── data/               (NEW!)
+│   └── current-verse.json  (NEW!)
+└── requirements.txt
