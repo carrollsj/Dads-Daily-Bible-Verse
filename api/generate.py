@@ -8,9 +8,10 @@ def handler(request):
         if not api_key:
             raise ValueError("Missing OPENAI_API_KEY environment variable")
 
+        # ✅ Initialize OpenAI client (works with sk-proj keys)
         client = OpenAI(api_key=api_key)
 
-        # Handle both Vercel test requests and POST requests
+        # Handle Vercel test and POST requests
         try:
             body = json.loads(request.body)
         except Exception:
@@ -21,28 +22,20 @@ def handler(request):
         message = body.get("message", "")
         theme = body.get("theme", "nature")
 
-        prompt = (
-            f"Photorealistic {theme} scene inspired by the verse {verse} ({version}). "
-            f"Include nature, peace, and divine light."
-        )
+        # ✅ Generate an image (simple text prompt)
+        prompt = f"Create a serene background for the Bible verse '{verse}' in {version} about {theme}, add text 'Love Dad' in bottom right."
 
-        response = client.images.generate(
+        result = client.images.generate(
             model="gpt-image-1",
             prompt=prompt,
             size="1024x1024"
         )
 
-        image_url = response.data[0].url
-
+        image_url = result.data[0].url
         return {
             "statusCode": 200,
             "headers": {"Content-Type": "application/json"},
-            "body": json.dumps({
-                "image_url": image_url,
-                "verse": verse,
-                "message": message,
-                "theme": theme
-            })
+            "body": json.dumps({"image_url": image_url})
         }
 
     except Exception as e:
