@@ -1,23 +1,31 @@
+import os
+import json
 from openai import OpenAI
-import os, json
-
-client = OpenAI(api_key=os.getenv("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"))
 
 def handler(request):
     try:
-        data = request.json()
-        verse = data.get("verse", "")
-        version = data.get("version", "CSB")
-        message = data.get("message", "")
-        theme = data.get("theme", "nature")
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise ValueError("Missing OPENAI_API_KEY environment variable")
+
+        client = OpenAI(api_key=api_key)
+
+        # Handle both Vercel test requests and POST requests
+        try:
+            body = json.loads(request.body)
+        except Exception:
+            body = {}
+
+        verse = body.get("verse", "Psalm 23:1")
+        version = body.get("version", "CSB")
+        message = body.get("message", "")
+        theme = body.get("theme", "nature")
 
         prompt = (
-            f"Photorealistic {theme} scene, high-resolution, beautiful lighting, "
-            f"inspired by the verse {verse} ({version}). "
-            f"Include subtle spiritual warmth, like divine sunlight or peace."
+            f"Photorealistic {theme} scene inspired by the verse {verse} ({version}). "
+            f"Include nature, peace, and divine light."
         )
 
-        # Generate image
         response = client.images.generate(
             model="gpt-image-1",
             prompt=prompt,
@@ -28,19 +36,18 @@ def handler(request):
 
         return {
             "statusCode": 200,
+            "headers": {"Content-Type": "application/json"},
             "body": json.dumps({
                 "image_url": image_url,
                 "verse": verse,
                 "message": message,
                 "theme": theme
-            }),
-            "headers": {"Content-Type": "application/json"}
+            })
         }
 
     except Exception as e:
         return {
             "statusCode": 500,
-            "body": json.dumps({"error": str(e)}),
-            "headers": {"Content-Type": "application/json"}
+            "headers": {"Content-Type": "application/json"},
+            "body": json.dumps({"error": str(e)})
         }
-
