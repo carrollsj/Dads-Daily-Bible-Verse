@@ -2,17 +2,14 @@ import os
 import json
 from openai import OpenAI
 
-def handler(request):
+def handler(request, response):
     try:
-        # Get OpenAI API key from environment variables
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
             raise ValueError("Missing OPENAI_API_KEY environment variable")
 
-        # Initialize client
         client = OpenAI(api_key=api_key)
 
-        # Parse incoming request body
         try:
             body = json.loads(request.body)
         except Exception:
@@ -23,23 +20,20 @@ def handler(request):
         message = body.get("message", "")
         theme = body.get("theme", "nature")
 
-        # Call OpenAI API to generate a description (text only for now)
-        response = client.responses.create(
+        result = client.responses.create(
             model="gpt-4o-mini",
-            input=f"Create a short peaceful devotional caption for {verse} ({version}) with a {theme} theme. Message: {message}"
+            input=f"Create a short devotional caption for {verse} ({version}) with a {theme} theme. Message: {message}"
         )
 
-        text_output = response.output[0].content[0].text
+        caption = result.output[0].content[0].text
 
-        return {
-            "statusCode": 200,
-            "headers": {"Content-Type": "application/json"},
-            "body": json.dumps({"verse": verse, "caption": text_output})
-        }
+        response.status_code = 200
+        response.headers["Content-Type"] = "application/json"
+        response.body = json.dumps({"verse": verse, "caption": caption})
+        return response
 
     except Exception as e:
-        return {
-            "statusCode": 500,
-            "headers": {"Content-Type": "application/json"},
-            "body": json.dumps({"error": str(e)})
-        }
+        response.status_code = 500
+        response.headers["Content-Type"] = "application/json"
+        response.body = json.dumps({"error": str(e)})
+        return response
