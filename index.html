@@ -1,72 +1,90 @@
-import os
-import json
-from openai import OpenAI
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dad's Daily Bible Verse</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <!-- Verse display -->
+  <div class="verse-container">
+    <div class="overlay">
+      <h1 id="verse-text">Loading today's verse...</h1>
+      <p id="verse-reference"></p>
+      <p id="custom-message"></p>
+    </div>
+    <div class="love-dad">Love Dad</div>
+  </div>
 
-def handler(request, response):
-    try:
-        api_key = os.getenv("OPENAI_API_KEY")
-        if not api_key:
-            raise ValueError("Missing OPENAI_API_KEY environment variable")
-        
-        client = OpenAI(api_key=api_key)
-        
-        try:
-            body = json.loads(request.body)
-        except Exception:
-            body = {}
-        
-        verse = body.get("verse", "Psalm 23:1")
-        version = body.get("version", "CSB")
-        message = body.get("message", "")
-        theme = body.get("theme", "nature")
-        
-        # Build the image prompt
-        prompt = f"""Create a beautiful, inspirational image for a Bible verse.
-        
-Verse: {verse} ({version})
-Theme: {theme}
-{f"Personal message: {message}" if message else ""}
+  <!-- Interaction section -->
+  <div class="interaction-section">
+    <button id="like-button">❤️ Like <span id="like-count">0</span></button>
 
-Style: Clean, modern, inspirational design with elegant typography. 
-The image should have a {theme} background.
-Include the verse reference "{verse}" in the image.
-Make it suitable for sharing with family."""
+    <!-- Comments -->
+    <div class="comments-section">
+      <h3>Comments</h3>
+      <div id="comment-list">
+        <p>No comments yet. Be the first to share your thoughts!</p>
+      </div>
+      <textarea id="new-comment" placeholder="Write a comment..."></textarea>
+      <button id="add-comment">Add Comment</button>
+    </div>
 
-        # Generate the image using DALL-E
-        result = client.images.generate(
-            model="dall-e-3",
-            prompt=prompt,
-            size="1024x1024",
-            quality="standard",
-            n=1
-        )
-        
-        # Get the image URL from the response
-        image_url = result.data[0].url
-        
-        # Save to data/verses.json
-        # Note: In production, use a database like Vercel KV or PostgreSQL
-        # For now, we'll return the data and you can manually update verses.json
-        
-        verse_data = {
-            "verse": verse,
-            "version": version,
-            "message": message,
-            "image_url": image_url,
-            "date": None  # You can add timestamp here
+    <!-- Search -->
+    <div class="search-section">
+      <h3>Search Previous Verses</h3>
+      <input type="text" id="search-input" placeholder="Search by verse or keyword...">
+      <button id="search-button">Search</button>
+      <div id="search-results"></div>
+    </div>
+
+    <!-- Verse requests -->
+    <div class="request-section">
+      <h3>Request a Verse or Topic</h3>
+      <textarea id="request-input" placeholder="Ask Dad for a verse or topic..."></textarea>
+      <button id="send-request">Send Request</button>
+      <p id="request-confirmation" class="hidden">Request sent! 💌</p>
+    </div>
+  </div>
+
+  <!-- Admin link -->
+  <a href="admin.html" class="admin-link">⚙️ Admin</a>
+
+  <script>
+    // Load the current verse on page load
+    async function loadCurrentVerse() {
+      try {
+        const response = await fetch('/data/current-verse.json');
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Update the page with verse data
+          document.getElementById('verse-text').textContent = `"${data.text}"`;
+          document.getElementById('verse-reference').textContent = `${data.verse} (${data.version})`;
+          document.getElementById('custom-message').textContent = data.message || '';
+          
+          // If there's an image URL, set it as background
+          if (data.image_url) {
+            const container = document.querySelector('.verse-container');
+            container.style.backgroundImage = `url(${data.image_url})`;
+            container.style.backgroundSize = 'cover';
+            container.style.backgroundPosition = 'center';
+          }
         }
-        
-        # Return the image URL to the frontend
-        response.status_code = 200
-        response.headers["Content-Type"] = "application/json"
-        response.body = json.dumps(verse_data)
-        
-        return response
-        
-    except Exception as e:
-        response.status_code = 500
-        response.headers["Content-Type"] = "application/json"
-        response.body = json.dumps({
-            "error": str(e)
-        })
-        return response
+      } catch (error) {
+        console.error('Error loading verse:', error);
+        // Keep the default hardcoded verse if fetch fails
+        document.getElementById('verse-text').textContent = '"The Lord is my shepherd; I have what I need."';
+        document.getElementById('verse-reference').textContent = 'Psalm 23:1 (CSB)';
+        document.getElementById('custom-message').textContent = 'Have a peaceful day. ❤️';
+      }
+    }
+
+    // Load verse when page loads
+    loadCurrentVerse();
+  </script>
+  
+  <script src="assets/script.js"></script>
+</body>
+</html>
