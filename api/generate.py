@@ -1,7 +1,7 @@
 from openai import OpenAI
 import os, json
 
-client = OpenAI(api_key=os.getenv("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"))
+client = OpenAI(api_key=os.getenv("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"))
 
 def handler(request):
     try:
